@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Antispam</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+        <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+        </symbol>
+        <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+        </symbol>
+        <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+        </symbol>
+      </svg>
+      
+    <div id="overlay">
+        <div class="" id="overlay-content">
+            <svg class="bike" viewBox="0 0 48 30" width="48px" height="30px">
+                <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1">
+                    <g transform="translate(9.5,19)">
+                        <circle class="bike__tire" r="9" stroke-dasharray="56.549 56.549" />
+                        <g class="bike__spokes-spin" stroke-dasharray="31.416 31.416" stroke-dashoffset="-23.562">
+                            <circle class="bike__spokes" r="5" />
+                            <circle class="bike__spokes" r="5" transform="rotate(180,0,0)" />
+                        </g>
+                    </g>
+                    <g transform="translate(24,19)">
+                        <g class="bike__pedals-spin" stroke-dasharray="25.133 25.133" stroke-dashoffset="-21.991" transform="rotate(67.5,0,0)">
+                            <circle class="bike__pedals" r="4" />
+                            <circle class="bike__pedals" r="4" transform="rotate(180,0,0)" />
+                        </g>
+                    </g>
+                    <g transform="translate(38.5,19)">
+                        <circle class="bike__tire" r="9" stroke-dasharray="56.549 56.549" />
+                        <g class="bike__spokes-spin" stroke-dasharray="31.416 31.416" stroke-dashoffset="-23.562">
+                            <circle class="bike__spokes" r="5" />
+                            <circle class="bike__spokes" r="5" transform="rotate(180,0,0)" />
+                        </g>
+                    </g>
+                    <polyline class="bike__seat" points="14 3,18 3" stroke-dasharray="5 5" />
+                    <polyline class="bike__body" points="16 3,24 19,9.5 19,18 8,34 7,24 19" stroke-dasharray="79 79" />
+                    <path class="bike__handlebars" d="m30,2h6s1,0,1,1-1,1-1,1" stroke-dasharray="10 10" />
+                    <polyline class="bike__front" points="32.5 2,38.5 19" stroke-dasharray="19 19" />
+                </g>
+            </svg>
+    
+        </div>
+    </div>
+    <div id="loader-div">
+        <div class="loader"></div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="topnav"></div>        
+        </div>
+        <div class="col-12">
+            <div class="container">
+                <div class="alert alert-info alert-dismissible fade show" role="alert" style="font-size: 10px;">
+                    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Info:"><use xlink:href="#info-fill"/></svg>
+                    We will use the email that you provide to save the result of research in our database. 
+                    Also, sending your email address indicates your consent for your shared information to be used on our platform to improve our system. If you're not interested, you can still use our platform without providing any personal information.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>    
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <hr />
+        <div class="content __wait mb" >
+            <center>
+                <h1 class="mb" id="grandTitle"></h1>
+                <h3 class="mb" id="subTitle"></h3>
+            </center>
+        </div>
+        <hr>
+        <div id="content">
+            <div class="row iamcontainer" id="content-speed-check">
+                <form id="speed-check-form" data-action="sendPostRequest" action="#">
+                    <input type="hidden" name="type" value="speed-check">
+                    <div class="_secondary">
+                        <div class="form" id="speed-check-form">
+                            <div class="row">
+                                <div class="col-12 mb">
+                                    <textarea id="field" name="message" class="mb field" placeholder=" >> Type Here" rows="10" cols="40" ></textarea>
+                                </div>
+                                <div class="col-12">
+                                    <div class="row mb">
+                                        <div class="col-md-6">
+                                            <div class="form-check">
+                                                <input class="form-check-input ihavetoopensomething" data-target="save_result_speed_check" type="checkbox" value="" name="saveresearch" id="saveresearch">
+                                                <label class="form-check-label" for="flexCheckChecked">Please save my researches</label>
+                                            </div>        
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="save_result_speed_check" style="border: 3px solid rgb(173, 134, 244); border-radius: 10px; display: none; font-size: 12px;">
+                                                <input type="email" class="form-control" name="email_to_save" placeholder="Your email here">
+                                            </div>    
+                                        </div>
+                                    </div>
+                                    <div class="row mb">
+                                        <div class="col-md-6">
+                                            <div class="form-check">
+                                                <input class="form-check-input ihavetoopensomething" data-target="more_info_speed_check" type="checkbox" value="" name="ihavemoreinformation" id="ihavemoreinformation">
+                                                <label class="form-check-label" for="flexCheckDefault">I have more information</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="more_info_speed_check" style="border: 3px solid rgb(173, 134, 244); border-radius: 10px; display: none; font-size: 12px;">
+                                                <input type="text" class="form-control" name="profile_link" placeholder="Link to suspect profile">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-12 mb">
+                                    <button type="submit" class="_huge load_more_msgs" "> Let's check </button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="row iamcontainer" id="content-history">
+            </div>
+            <div class="row iamcontainer" id="content-profile-analyse">
+            </div>
+            <div class="row iamcontainer" id="content-full-discursion-check">
+                <form action="#" enctype="multipart/form-data" method="POST" id="formToSendF">
+                    <div class="row">
+                        <div class="col-12 mb">
+                            <center>
+                                <div class="drop-zone">
+                                    <span class="drop-zone__prompt" >Drop file here or click to upload !</span>
+                                    <input type="file" name="myFile" class="drop-zone__input">
+                                </div>
+                            </center>
+                            <div class="row">
+                                <div class="col-12">
+                                    <button class="_huge load_more_msgs" type="submit"> Lets's check </button>
+                                </div>
+                            </div>
+                        </div>						    
+                    </div> 
+                </form>
+            
+            </div>
+
+        </div>
+        <div class="container iamcontainer" id="results-div">
+            <div class="row" id="results-div-mainTitle"></div>
+            <div class="response-grid" id="responseGrid">
+            </div>
+            <div class="row">
+                <div class='col-md-6'></div>
+                <div class='col-md-3'><button type="button" class="_huge load_more_msgs" id="generatePDF">Generate PDF Raport</button></div>
+                <div class='col-md-3'><button type="button" class="_huge load_more_msgs" id="resetView">New</button></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.4.0/purify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-QhGpb9rbzLTrOl5Q1KZ+tyDBH2cmkm63CRDrUzzkzKbgS0ZpXbHi2CnVi3B8V7b+e6rkJbRzUXD5MKzALbLoog==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script>
+        // import { jsPDF } from "jspdf";
+        // import DOMPurify from "dompurify";
+
+        function showOverlay() {
+            $('#overlay').addClass('active');
+            $('#loader-div').removeClass('active');
+        }
+
+        function hideOverlay() {
+            $('#overlay').removeClass('active');
+            $('#loader-div').removeClass('active');
+        }
+        function showOverlay2() {
+            $('#loader-div').addClass('active');
+        }
+
+        function hideOverlay2() {
+            $('#loader-div').removeClass('active');
+        }
+
+        showOverlay();
+
+        $(document).ready(function () {
+            _this = this;
+
+            const data_formats = {
+                'speed-check': {
+                    'token': 'token',
+                    'type': 'speed-check',
+                    'content': {
+                        'message': 'content message',
+                    },
+                },
+                'history': {
+                    'token': 'token',
+                    'type': 'history',
+                    'content': {
+                        'email': 'your@email.com',
+                        'verification-code': 'code-sent-per-email',
+                    },
+                },
+                'profile-analysis': {
+                    'token': 'token',
+                    'type': 'profile-analysis',
+                    'content': {
+                        'url': 'https://facebook.com/something',
+                    },
+                },
+                'full-discursion-check': {
+                    'token': 'token',
+                    'type': 'profile-analysis',
+                    'content': {
+                        'file': 'contentfile',
+                    },
+                }
+            };
+
+            const navbaritemsConst =  [
+                {
+                    id: 1,
+                    render: "speed-check",
+                    name: "Speed Check",
+                    active: true,
+                    subItem: {
+                        title: "Speed Check",
+                        subTitle: "Past the suspicious message here",
+                    },
+                },
+                {
+                    id: 2,
+                    render: "history",
+                    name: "History",
+                    active: false,
+                    subItem: {
+                        title: "My Logs",
+                        subTitle: "Here you have some list of yours previous research",
+                    },
+                },
+                {
+                    id: 3,
+                    render: "profile-analyse",
+                    name: "Profil Analise",
+                    active: false,
+                    subItem: {
+                        title: "Analyse a Profil",
+                        subTitle: "he seem's suspicious, let's give an eye on him !",
+                    },
+                },
+                {
+                    id: 4,
+                    render: "full-discursion-check",
+                    name: "Full discursion check",
+                    active: false,
+                    subItem: {
+                        title: "Import a file of one or more messenger's or instagram discursion",
+                        subTitle: " Let's me see all your discursion with the suspicious person !",
+                    },
+                },
+            ];
+            
+            var navbaritems = [];
+            var activeComponent = '';
+            var idContentActiv = ''
+
+            var activeItem = {};
+            const storedItems = localStorage.getItem("itemsNavBar");
+            navbaritems = (storedItems && storedItems !== "undefined") ? JSON.parse(storedItems) : navbaritemsConst;
+
+            var urlServer = urlServer && typeof urlServer != "undefined"  ? urlServer : "192.168.1.23"//"192.168.1.23";
+
+            var navbarHtml = $(".topnav");
+            var navbarHtmlContent = '';
+
+            $.each(navbaritems, function (index, item) {
+                $('.iamcontainer').hide();
+                navbarHtmlContent += "<a id='nav-" + item.render + "' href='#content-" + item.render + "' class='changeClassActive "+(item.active ? 'active' : '')+"' data-render='" + item.render + "'>" + item.name + "</a> ";
+                if (item.active) {
+                    idContentActiv = '#nav-'+ item.render;
+                }
+            });
+            navbarHtml.html(navbarHtmlContent);
+
+            $('.topnav').on('click', '.changeClassActive', function (e) {
+                e.preventDefault();
+                let _this = this;
+                var id = $(_this).data('render');
+                $('.iamcontainer').hide();
+                navbaritems.forEach(function (i) {
+                    i.active = false;
+                    $('.topnav #nav-'+i.render).removeClass('active');
+                });
+                navbaritems.forEach(function (i) {
+                    if (i.render === id) {
+                        i.active = true;
+                        $('.topnav #nav-'+i.render).addClass('active');
+                        activeComponent = i.render;
+                        activeItem = i.subItem;
+                        $('#grandTitle').text(activeItem.title);
+                        $('#subTitle').text(activeItem.subTitle);
+                        $('#content-'+ i.render).show(500);
+                        idContentActiv = '#nav-'+ i.render;
+                        persistItems();
+                    }
+                });
+            });
+            
+            $('.ihavetoopensomething').on('click', function() {
+                var target = $('#' + $(this).data('target'));
+                if (target.length) { 
+                    target.css('display', $(this).is(':checked') ? '' : 'none');
+                    target.find('input').css('height', $(this).css('height'));
+                    target.find('input').css('font-size', '12px');
+                    target.find('input').attr('required', $(this).is(':checked'));
+                }
+            });
+            function is_valid_link(link) {
+                return true;
+                var urlRegex = /^(https?:\/\/)?([\w-]+(\.[\w-]+)+)([\/\w-]*)*\/?$/;
+                return urlRegex.test(link);
+            }
+            function is_valid_email(email) {
+                var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailRegex.test(email);
+            }
+            function persistItems() {
+                localStorage.setItem("itemsNavBar", JSON.stringify(this.itemsNavBar));
+            }
+            $(idContentActiv).trigger('click');
+            $('#resetView').on('click', function (){
+                resetView();
+            })
+            $('#generatePDF').on('click', function (){
+                generatePDF();
+            })
+
+            $('form[data-action="sendPostRequest"]').on('submit', function(e) {
+                e.preventDefault();
+                showOverlay2();
+                if (!$(this).find('[name="type"]').val()) {
+                    toastr.error("Try again later");
+                    hideOverlay2();
+                    return 
+                }
+                var type = $(this).find('[name="type"]').val();
+                const validFormats = ['speed-check', 'history', 'profile-analysis', 'full-discursion-check'];
+                if ( !validFormats.includes(type)) {
+                    toastr.error("Invalid type specified !");
+                    hideOverlay2();
+                    return 
+                }
+                var formData = $(this).serialize();
+                var obj = {
+                    type: type,
+                    content: {}
+                };
+                var formDataArray = $(this).serializeArray();
+                $.each(formDataArray, function (index, field) {
+                    obj.content[field.name] = field.value;
+                });
+
+                if (Object.keys(obj.content).length === 0 && obj.content.constructor === Object) {
+                    toastr.error("Form data is empty !");
+                    hideOverlay2();
+                    return;
+                }
+
+                if (typeof data_formats[obj.type] === 'undefined' || !data_formats[obj.type]) {
+                    toastr.error("Expected format not found !");
+                    hideOverlay2();
+                    return;
+                }
+                const { content } = obj;
+                const { content: expectedContent } = data_formats[obj.type];
+                console.log(content)
+                switch (obj.type) {
+                    case 'speed-check':
+                        if (!content.message) {
+                            toastr.error("Missing message in content !");
+                            hideOverlay2();
+                            return;
+                        }
+                        if (typeof content.profile_link !== 'undefined' && content.profile_link !== ''  && !is_valid_link (content.profile_link)) {
+                                                console.log(content.profile_link)
+                            hideOverlay2();
+                            toastr.error("Profile link has not a validate format!");
+                            return;
+                        }
+                        if (typeof content.email_to_save !== 'undefined' && content.email_to_save !== '' && !is_valid_email (content.email_to_save)) {
+                        console.log(content.email_to_save)
+                            hideOverlay2();
+                            toastr.error("E-mail has not a validate format!");
+                            return;
+                        }
+                        break;
+                    case 'history':
+                        if (!content.email || !content['verification-code']) {
+                            toastr.error("Missing email or/and verification-code in content !");
+                            hideOverlay2();
+                            return;
+                        }
+                        break;
+                    case 'profile-analysis':
+                        if (!content.url) {
+                            toastr.error("Missing url in content !");
+                            hideOverlay2();
+                            return;
+                        }
+                        break;
+                    case 'full-discursion-check':
+                        if (!content.file) {
+                            toastr.error("Missing file in content !");
+                            hideOverlay2();
+                            return;
+                        }
+                        break;
+                    default:
+                        toastr.error("Unknown type specified in content !");
+                        hideOverlay2();
+                        return;
+                }
+
+                $.ajax({
+                    url: "http://"+urlServer+":12345", 
+                    method:"POST",
+                    headers : {
+                        'Content-Type': "application/json",
+                        'Accept': "*/*",
+                        "Accept-Encoding": "gzip, deflate, br",
+                        'Connection': "Keep-alive",
+                    },
+                    data: JSON.stringify(obj),
+                    success: function(result){
+                        if (result.error) {
+                            toastr.error("We are sorry. There's a problem with the server. Please try again later");
+                            return;
+                        }
+                        toastr.success("Data received ! We are loading the results !");
+
+                        hideOrShowResponseContent('results');
+                        addResponseCards(result.response, result.more, type);
+                        hideOverlay2();
+                    },
+                    error() {
+                        toastr.error("An error occurred. Please try again later");
+                        hideOverlay2();
+                    }
+                });
+            });
+            function hideOrShowResponseContent(type) {
+                $('.iamcontainer').hide();
+                $('#results-div').hide();
+
+                switch (type) {
+                    case 'speed-check':
+                        $('#content-speed-check').show();
+                        break;
+                    case 'history':
+                        $('#content-history').show();
+                        break;
+                    case 'profile-analysis':
+                        $('#content-profile-analyse').show();
+                        break;
+                    case 'full-discursion-check':
+                        $('#content-full-discursion-check').show();
+                        break;
+                    case 'results':
+                        $('#results-div').show();
+                        break;
+                    default:
+                        break;
+                }
+            }
+            
+            function getHeaderColor(type) {
+                var colors = {
+                    'Detail': '#4CAF50',
+                    'image': '#2196F3',
+                    'general': '#2136B3',
+                };
+                return colors[type] || '#CCCCCC';
+            }
+
+            function addResponseCards(response, more, type) {
+                var bigTitle = '';
+                switch (type) {
+                    case 'speed-check':
+                        bigTitle = 'Analysis of the message';
+                        break;
+                    case 'history':
+                        bigTitle = 'Loading of the latest research';
+                        break;
+                    case 'profile-analysis':
+                        bigTitle = 'Result of the analysis';
+                        break;
+                    case 'full-discursion-check':
+                        bigTitle = 'Analysis of the messages';
+                        break;
+                    default:
+                        break;
+                }
+
+                var cardP = $('<div class="response-card"></div>');
+                var headerColor = getHeaderColor('general');
+                var cardPHeader = $('<div class="card-header"></div>').css('background-color', headerColor).text(bigTitle);
+
+                var bodyContent = '';
+
+                if (more && more.details) {
+                    bodyContent = '<div class="row"><div class="col-12"><table class="table table-responsive"><tbody>'
+                    more.details.forEach(function (detail) {
+                        var key = Object.keys(detail)[0];
+                        var value = detail[key];
+                        bodyContent += '<tr><td style="width:20%"><h6>' + key + '</h6></td><td>' + value + '</td></tr>';
+                    });
+                    bodyContent+='</tbody></table></div></div>';
+                }
+
+                var cardPBody = $('<div class="card-body"></div>').html(bodyContent);
+                cardP.append(cardPHeader).append(cardPBody);
+                $('#responseGrid').append(cardP);
+
+                response.forEach(function (responseItem) {
+                    var card = $('<div class="response-card"></div>');
+                    var headerColor = getHeaderColor(responseItem.type);
+                    var cardHeader = $('<div class="card-header"></div>').css('background-color', headerColor).text(responseItem.title);
+                    var cardBody = $('<div class="card-body"></div>');
+
+                    if (responseItem.type === 'Title') {
+                        cardBody.append('<h2>' + responseItem.title + '</h2>');
+                    } else if (responseItem.type === 'Detail') {
+                        responseItem.datas.forEach(function (detail) {
+                            cardBody.append(detail);
+                        });
+                    } else if (responseItem.type === 'image') {
+                        if (responseItem.subtitle) {
+                            cardBody.append(responseItem.subtitle);
+                        }
+                        responseItem.datas.forEach(function (imgSrc) {
+                            cardBody.append('<img src="' + imgSrc + '" alt="' + responseItem.title + '" class="img-thumbnail">');
+                        });
+                    }
+
+                    card.append(cardHeader).append(cardBody);
+                    $('#responseGrid').append(card);
+                });
+            }
+            function resetView() {
+                response = [];
+                hideOverlay();
+                $('#responseGrid').html('');
+                hideOrShowResponseContent('');
+                $(idContentActiv).trigger('click');
+            }
+
+            function generatePDF() {
+                const { jsPDF } = window.jspdf;
+                var pdf = new jsPDF();
+                var content = $('#responseGrid').html();
+                pdf.html(content, {
+                    callback: function (pdf) {
+                        pdf.save('analysis_result.pdf');
+                    },
+                    x: 15,
+                    y: 15
+                });
+        }
+        });
+        $(window).on('load', function() {
+            hideOverlay();
+        });
+
+    </script>
+</body>
+</html>
